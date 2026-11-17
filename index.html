@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة إنجاز | تسجيل الدخول</title>
+    <!-- خط تجوال العربي الاحترافي -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- مكتبة الأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-800 flex h-screen overflow-hidden">
+
+    <!-- شاشة تسجيل الدخول -->
+    <div id="auth-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 relative overflow-hidden">
+            <div class="absolute -top-12 -left-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
+            
+            <div class="text-center mb-8 relative z-10">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h1 class="text-2xl font-extrabold text-slate-900">مرحباً بك في منصة إنجاز</h1>
+                <p class="text-sm text-slate-500 mt-1">سجل دخولك لمتابعة موادك واختباراتك</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4 relative z-10">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">اسم الطالب / الطالبة</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400">
+                            <i class="fa-regular fa-user"></i>
+                        </span>
+                        <input type="text" id="login-name" required placeholder="أدخل اسمك الكريم..." class="w-full pr-10 pl-4 py-3 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">البريد الإلكتروني أو اسم المستخدم</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400">
+                            <i class="fa-regular fa-envelope"></i>
+                        </span>
+                        <input type="text" id="login-email" required placeholder="student@school.com" class="w-full pr-10 pl-4 py-3 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">كلمة المرور</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400">
+                            <i class="fa-solid fa-lock"></i>
+                        </span>
+                        <input type="password" id="login-pass" required placeholder="••••••••" class="w-full pr-10 pl-4 py-3 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-500/25 transition">
+                    تسجيل الدخول والبدء <i class="fa-solid fa-arrow-left mr-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- القائمة الجانبية (Sidebar) -->
+    <aside class="w-64 bg-slate-900 text-white flex flex-col justify-between shrink-0 transition-all duration-300 z-20" id="sidebar">
+        <div>
+            <!-- الشعار -->
+            <div class="p-6 flex items-center gap-3 border-b border-slate-800">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-xl font-bold shadow-lg">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl tracking-wide">منصة إنجاز</h1>
+                    <p class="text-xs text-slate-400">نظام المتابعة الذكي</p>
+                </div>
+            </div>
+
+            <!-- روابط التنقل -->
+            <nav class="p-4 space-y-2">
+                <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-bold transition">
+                    <i class="fa-solid fa-chart-pie w-5"></i>
+                    <span>لوحة التحكم الرئيسية</span>
+                </button>
+                <button onclick="switchView('schedule')" id="nav-schedule" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white font-medium transition">
+                    <i class="fa-solid fa-calendar-week w-5"></i>
+                    <span>الجدول الدراسي الأسبوعي</span>
+                </button>
+                <button onclick="switchView('tasks')" id="nav-tasks" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white font-medium transition">
+                    <i class="fa-solid fa-bell w-5"></i>
+                    <span>الاختبارات والواجبات</span>
+                </button>
+
+                <div class="pt-4 pb-2 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider">المواد الدراسية</div>
+                <div id="sidebar-subjects" class="space-y-1 max-h-60 overflow-y-auto pr-1">
+                    <!-- يتم توليد المواد هنا تلقائياً -->
+                </div>
+            </nav>
+        </div>
+
+        <!-- معلومات المستخدم وتسجيل الخروج -->
+        <div class="p-4 border-t border-slate-800 space-y-2">
+            <div class="flex items-center justify-between px-2 py-1 text-xs text-slate-400">
+                <span id="user-display-name" class="font-bold text-slate-200 truncate max-w-[120px]">طالب</span>
+                <button onclick="logout()" class="text-rose-400 hover:text-rose-300 transition" title="تسجيل الخروج">
+                    <i class="fa-solid fa-right-from-bracket"></i> خروج
+                </button>
+            </div>
+            <button onclick="exportData()" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 transition">
+                <i class="fa-solid fa-download"></i> حفظ نسخة احتياطية (JSON)
+            </button>
+            <button onclick="resetAllData()" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/10 text-xs text-red-400 transition">
+                <i class="fa-solid fa-rotate-left"></i> تصفير جميع البيانات
+            </button>
+        </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <!-- الشريط العلوي -->
+        <header class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between shrink-0">
+            <div>
+                <h2 id="page-title" class="text-2xl font-extrabold text-slate-800">لوحة التحكم الرئيسية</h2>
+                <p id="page-subtitle" class="text-sm text-slate-500">مرحباً بك! تابع إنجازك اليومي واستعد للاختبارات</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="bg-indigo-50 text-indigo-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span id="current-date"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- منطقة العرض المتغيرة -->
+        <div id="content-area" class="flex-1 overflow-y-auto p-8 space-y-8">
+            <!-- يتم حقن المحتوى هنا عبر JavaScript -->
+        </div>
+    </main>
+
+    <!-- نافذة منبثقة (Modal) لإضافة البيانات -->
+    <div id="modal-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden animate-fade-in">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                <h3 id="modal-title" class="font-bold text-lg text-slate-800">إضافة جديد</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-xl">&times;</button>
+            </div>
+            <div id="modal-body" class="p-6">
+                <!-- محتوى النموذج -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. البيانات الافتراضية والتخزين
+        // ==========================================
+        const defaultData = {
+            subjects: [
+                {
+                    id: 'bio',
+                    name: 'الأحياء',
+                    icon: 'fa-dna',
+                    color: 'emerald',
+                    units: [
+                        { id: 'u1', title: 'الوحدة 1: مدخل إلى علم الأحياء', lessons: [{ id: 'l1', title: 'طبيعة العلم وطرائقه', done: false }] },
+                        { id: 'u2', title: 'الوحدة 2: تنظيم تنوع الحياة', lessons: [] },
+                        { id: 'u3', title: 'الوحدة 3: البكتيريا والفيروسات', lessons: [] },
+                        { id: 'u4', title: 'الوحدة 4: الطلائعيات والفطريات', lessons: [] },
+                        { id: 'u5', title: 'الوحدة 5: مدخل إلى الحيوانات', lessons: [] },
+                        { id: 'u6', title: 'الوحدة 6: الديدان والرخويات', lessons: [] },
+                        { id: 'u7', title: 'الوحدة 7: المفصليات وشوكيات الجلد', lessons: [] },
+                        { id: 'u8', title: 'الوحدة 8: الأسماك والبرمائيات', lessons: [] }
+                    ],
+                    questions: [
+                        { id: 'q1', q: 'ما هي وحدة البناء والوظيفة في المخلوقات الحية؟', a: 'الخلية' }
+                    ],
+                    notes: 'ملاحظة: التركيز على رسومات التراكيب الخلوية في الوحدة الأولى.'
+                },
+                {
+                    id: 'chem',
+                    name: 'الكيمياء',
+                    icon: 'fa-flask',
+                    color: 'purple',
+                    units: [
+                        { id: 'c1', title: 'الوحدة 1: مقدمة في الكيمياء', lessons: [] },
+                        { id: 'c2', title: 'الوحدة 2: المادة - الخواص والتغيرات', lessons: [] }
+                    ],
+                    questions: [],
+                    notes: ''
+                },
+                {
+                    id: 'eng',
+                    name: 'الإنجليزي',
+                    icon: 'fa-language',
+                    color: 'blue',
+                    units: [
+                        { id: 'e1', title: 'Unit 1: Big Changes', lessons: [] },
+                        { id: 'e2', title: 'Unit 2: Careers', lessons: [] }
+                    ],
+                    questions: [],
+                    notes: ''
+                },
+                {
+                    id: 'kifayat',
+                    name: 'الكفايات اللغوية',
+                    icon: 'fa-book-open',
+                    color: 'amber',
+                    units: [
+                        { id: 'k1', title: 'الكفاية النحوية', lessons: [] },
+                        { id: 'k2', title: 'الكفاية الإملائية', lessons: [] }
+                    ],
+                    questions: [],
+                    notes: ''
+                },
+                {
+                    id: 'math',
+                    name: 'الرياضيات',
+                    icon: 'fa-square-root-variable',
+                    color: 'rose',
+                    units: [
+                        { id: 'm1', title: 'الفصل 1: التبرير والبرهان', lessons: [] },
+                        { id: 'm2', title: 'الفصل 2: التوازي والتعامد', lessons: [] }
+                    ],
+                    questions: [],
+                    notes: ''
+                },
+                {
+                    id: 'cs',
+                    name: 'الحاسب والتقنية',
+                    icon: 'fa-laptop-code',
+                    color: 'cyan',
+                    units: [
+                        { id: 'cs1', title: 'الوحدة 1: أساسيات علم الحاسب', lessons: [] },
+                        { id: 'cs2', title: 'الوحدة 2: العمل عبر الإنترنت', lessons: [] }
+                    ],
+                    questions: [],
+                    notes: ''
+                }
+            ],
+            tasks: [
+                { id: 't1', title: 'اختبار قصير - الوحدة الأولى', subject: 'الأحياء', type: 'اختبار', mode: 'حضوري', date: '2026-11-22', done: false },
+                { id: 't2', title: 'تسليم مشروع البرمجة', subject: 'الحاسب والتقنية', type: 'نشاط', mode: 'عن بعد', date: '2026-11-25', done: false }
+            ],
+            schedule: [
+                { id: 's1', day: 'الأحد', time: '07:30 ص', subject: 'الرياضيات', mode: 'حضوري', room: 'قاعة 102' },
+                { id: 's2', day: 'الأحد', time: '08:30 ص', subject: 'الأحياء', mode: 'حضوري', room: 'مختبر 2' },
+                { id: 's3', day: 'الإثنين', time: '04:00 م', subject: 'الإنجليزي', mode: 'عن بعد', room: 'منصة مدرستي / Teams' }
+            ]
+        };
+
+        let appData = JSON.parse(localStorage.getItem('injaz_study_data')) || defaultData;
+        let currentUser = localStorage.getItem('injaz_current_user') || null;
+        let currentView = 'dashboard';
+        let activeSubjectId = null;
+        let activeSubjectTab = 'units';
+
+        function saveData() {
+            localStorage.setItem('injaz_study_data', JSON.stringify(appData));
+            renderSidebarSubjects();
+        }
+
+        // ==========================================
+        // 2. إدارة تسجيل الدخول
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString('ar-SA', options);
+            
+            if (currentUser) {
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('user-display-name').textContent = currentUser;
+                renderSidebarSubjects();
+                switchView('dashboard');
+            }
+        });
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('login-name').value.trim();
+            currentUser = name;
+            localStorage.setItem('injaz_current_user', name);
+            document.getElementById('user-display-name').textContent = name;
+            document.getElementById('auth-screen').classList.add('hidden');
+            renderSidebarSubjects();
+            switchView('dashboard');
+        }
+
+        function logout() {
+            localStorage.removeItem('injaz_current_user');
+            location.reload();
+        }
+
+        // ==========================================
+        // 3. التنقل والعرض
+        // ==========================================
+        function renderSidebarSubjects() {
+            const container = document.getElementById('sidebar-subjects');
+            container.innerHTML = appData.subjects.map(sub => {
+                const progress = calculateSubjectProgress(sub);
+                const isActive = currentView === 'subject' && activeSubjectId === sub.id;
+                return `
+                    <button onclick="openSubject('${sub.id}')" class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm transition ${isActive ? 'bg-indigo-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800'}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid ${sub.icon} w-4 text-center"></i>
+                            <span>${sub.name}</span>
+                        </div>
+                        <span class="text-xs px-2 py-0.5 rounded-full ${isActive ? 'bg-indigo-500 text-white' : 'bg-slate-800 text-slate-400'}">${progress}%</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function switchView(view) {
+            currentView = view;
+            activeSubjectId = null;
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'font-bold');
+                btn.classList.add('text-slate-300');
+            });
+            const activeBtn = document.getElementById(`nav-${view}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-indigo-600', 'text-white', 'font-bold');
+                activeBtn.classList.remove('text-slate-300');
+            }
+            renderSidebarSubjects();
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'schedule') renderSchedule();
+            if (view === 'tasks') renderTasks();
+        }
+
+        function openSubject(id, tab = 'units') {
+            currentView = 'subject';
+            activeSubjectId = id;
+            activeSubjectTab = tab;
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'font-bold');
+                btn.classList.add('text-slate-300');
+            });
+            renderSidebarSubjects();
+            renderSubjectDetail();
+        }
+
+        function calculateSubjectProgress(sub) {
+            let totalLessons = 0, doneLessons = 0;
+            sub.units.forEach(u => {
+                totalLessons += u.lessons.length;
+                doneLessons += u.lessons.filter(l => l.done).length;
+            });
+            if (totalLessons === 0) return 0;
+            return Math.round((doneLessons / totalLessons) * 100);
+        }
+
+        function getUnitStats(sub) {
+            let completedUnits = 0;
+            sub.units.forEach(u => {
+                if (u.lessons.length > 0 && u.lessons.every(l => l.done)) {
+                    completedUnits++;
+                }
+            });
+            return { completed: completedUnits, total: sub.units.length };
+        }
+
+        // ==========================================
+        // 4. لوحة التحكم الرئيسية
+        // ==========================================
+        function renderDashboard() {
+            document.getElementById('page-title').textContent = 'لوحة التحكم الرئيسية';
+            document.getElementById('page-subtitle').textContent = `أهلاً بك يا ${currentUser}! نظرة شاملة على تقدمك الدراسي.`;
+
+            let totalAllLessons = 0, doneAllLessons = 0, totalQuestions = 0;
+            appData.subjects.forEach(s => {
+                totalQuestions += s.questions.length;
+                s.units.forEach(u => {
+                    totalAllLessons += u.lessons.length;
+                    doneAllLessons += u.lessons.filter(l => l.done).length;
+                });
+            });
+            const overallPercent = totalAllLessons ? Math.round((doneAllLessons / totalAllLessons) * 100) : 0;
+            const pendingTasks = appData.tasks.filter(t => !t.done);
+
+            const content = `
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500">الإنجاز العام</p>
+                            <h3 class="text-2xl font-extrabold text-slate-800">${overallPercent}%</h3>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-check-double"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500">الدروس المنجزة</p>
+                            <h3 class="text-2xl font-extrabold text-slate-800">${doneAllLessons} <span class="text-sm font-normal text-slate-400">/ ${totalAllLessons}</span></h3>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500">مهام قادمة</p>
+                            <h3 class="text-2xl font-extrabold text-slate-800">${pendingTasks.length}</h3>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-circle-question"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500">بنك الأسئلة</p>
+                            <h3 class="text-2xl font-extrabold text-slate-800">${totalQuestions} سؤال</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-extrabold text-slate-800 mb-4">المواد الدراسية (${appData.subjects.length})</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        ${appData.subjects.map(sub => {
+                            const prog = calculateSubjectProgress(sub);
+                            const uStats = getUnitStats(sub);
+                            let lessonsCount = 0, lessonsDone = 0;
+                            sub.units.forEach(u => {
+                                lessonsCount += u.lessons.length;
+                                lessonsDone += u.lessons.filter(l => l.done).length;
+                            });
+                            return `
+                                <div onclick="openSubject('${sub.id}')" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-300 transition cursor-pointer group">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-12 h-12 rounded-xl bg-${sub.color}-100 text-${sub.color}-600 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                                                <i class="fa-solid ${sub.icon}"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-lg text-slate-800">${sub.name}</h4>
+                                                <p class="text-xs text-slate-500">${sub.units.length} وحدات دراسية</p>
+                                            </div>
+                                        </div>
+                                        <span class="text-lg font-extrabold text-${sub.color}-600">${prog}%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-4">
+                                        <div class="bg-${sub.color}-500 h-full rounded-full transition-all duration-500" style="width: ${prog}%"></div>
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs text-slate-500 pt-3 border-t border-slate-100">
+                                        <span>وحدات مكتملة: <b>${uStats.completed}/${uStats.total}</b></span>
+                                        <span>الدروس: <b>${lessonsDone}/${lessonsCount}</b></span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-extrabold text-slate-800">المواعيد القادمة</h3>
+                        <button onclick="switchView('tasks')" class="text-sm text-indigo-600 font-bold hover:underline">عرض الكل &larr;</button>
+                    </div>
+                    ${pendingTasks.length === 0 ? '<p class="text-slate-400 text-sm py-4 text-center">لا توجد مهام قادمة حالياً.</p>' : `
+                        <div class="divide-y divide-slate-100">
+                            ${pendingTasks.slice(0, 4).map(t => `
+                                <div class="py-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <span class="px-2.5 py-1 rounded-lg text-xs font-bold ${t.type === 'اختبار' ? 'bg-rose-100 text-rose-700' : t.type === 'واجب' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}">${t.type}</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-sm">${t.title} <span class="text-slate-400 font-normal">(${t.subject})</span></p>
+                                            <p class="text-xs text-slate-500"><i class="fa-regular fa-calendar ml-1"></i> ${t.date}</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold ${t.mode === 'حضوري' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-purple-50 text-purple-700 border border-purple-200'}">
+                                        <i class="fa-solid ${t.mode === 'حضوري' ? 'fa-school' : 'fa-wifi'} ml-1"></i> ${t.mode}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `}
+                </div>
+            `;
+            document.getElementById('content-area').innerHTML = content;
+        }
+
+        // ==========================================
+        // 5. تفاصيل المادة
+        // ==========================================
+        function renderSubjectDetail() {
+            const sub = appData.subjects.find(s => s.id === activeSubjectId);
+            if (!sub) return;
+
+            const prog = calculateSubjectProgress(sub);
+            const uStats = getUnitStats(sub);
+            let totalLessons = 0, doneLessons = 0;
+            sub.units.forEach(u => {
+                totalLessons += u.lessons.length;
+                doneLessons += u.lessons.filter(l => l.done).length;
+            });
+
+            document.getElementById('page-title').textContent = `مادة ${sub.name}`;
+            document.getElementById('page-subtitle').textContent = `أنجزت ${uStats.completed} من أصل ${uStats.total} وحدات`;
+
+            let tabContent = '';
+            if (activeSubjectTab === 'units') {
+                tabContent = `
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-lg text-slate-800">قائمة الوحدات والدروس</h3>
+                        <button onclick="openAddUnitModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition">
+                            <i class="fa-solid fa-plus"></i> إضافة وحدة جديدة
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        ${sub.units.map((unit, uIdx) => {
+                            const uDone = unit.lessons.filter(l => l.done).length;
+                            const uTotal = unit.lessons.length;
+                            const isUnitComplete = uTotal > 0 && uDone === uTotal;
+                            return `
+                                <div class="bg-white rounded-2xl border ${isUnitComplete ? 'border-emerald-300 bg-emerald-50/10' : 'border-slate-200'} overflow-hidden shadow-sm">
+                                    <div class="p-5 bg-slate-50/70 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-lg ${isUnitComplete ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600'} flex items-center justify-center font-bold text-sm">
+                                                ${isUnitComplete ? '<i class="fa-solid fa-check"></i>' : uIdx + 1}
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-slate-800">${unit.title}</h4>
+                                                <p class="text-xs text-slate-500">الدروس المنجزة: ${uDone} من ${uTotal}</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="openAddLessonModal('${unit.id}')" class="bg-white border border-slate-200 hover:border-indigo-400 text-indigo-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                                                <i class="fa-solid fa-plus ml-1"></i> إضافة درس
+                                            </button>
+                                            <button onclick="deleteUnit('${unit.id}')" class="text-slate-400 hover:text-rose-500 p-1.5 transition"><i class="fa-solid fa-trash-can"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="p-4">
+                                        ${unit.lessons.length === 0 ? '<p class="text-xs text-slate-400 text-center py-2">لا توجد دروس مضافة.</p>' : `
+                                            <div class="space-y-2">
+                                                ${unit.lessons.map(lesson => `
+                                                    <div class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition">
+                                                        <label class="flex items-center gap-3 cursor-pointer flex-1">
+                                                            <input type="checkbox" ${lesson.done ? 'checked' : ''} onchange="toggleLesson('${unit.id}', '${lesson.id}')" class="w-5 h-5 rounded text-indigo-600 cursor-pointer">
+                                                            <span class="text-sm font-medium ${lesson.done ? 'line-through text-slate-400' : 'text-slate-700'}">${lesson.title}</span>
+                                                        </label>
+                                                        <button onclick="deleteLesson('${unit.id}', '${lesson.id}')" class="text-slate-300 hover:text-rose-500 text-xs px-2"><i class="fa-solid fa-xmark"></i></button>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        `}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            } else if (activeSubjectTab === 'questions') {
+                tabContent = `
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="font-bold text-lg text-slate-800">بنك الأسئلة والمراجعة التفاعلية</h3>
+                        </div>
+                        <button onclick="openAddQuestionModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition">
+                            <i class="fa-solid fa-plus"></i> إضافة سؤال وجواب
+                        </button>
+                    </div>
+                    ${sub.questions.length === 0 ? '<div class="bg-white p-12 rounded-2xl border border-slate-200 text-center text-slate-400">لا توجد أسئلة مضافة بعد.</div>' : `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            ${sub.questions.map((item, idx) => `
+                                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex justify-between items-start mb-3">
+                                            <span class="bg-indigo-50 text-indigo-600 text-xs font-bold px-2.5 py-1 rounded-lg">سؤال #${idx + 1}</span>
+                                            <button onclick="deleteQuestion('${item.id}')" class="text-slate-300 hover:text-rose-500"><i class="fa-solid fa-trash-can"></i></button>
+                                        </div>
+                                        <p class="font-bold text-slate-800 text-base mb-4">${item.q}</p>
+                                    </div>
+                                    <div>
+                                        <div id="ans-${item.id}" class="hidden p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium mb-3">
+                                            <b>الإجابة:</b> ${item.a}
+                                        </div>
+                                        <button onclick="document.getElementById('ans-${item.id}').classList.toggle('hidden')" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+                                            <i class="fa-regular fa-eye ml-1"></i> إظهار / إخفاء الإجابة
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `}
+                `;
+            } else if (activeSubjectTab === 'notes') {
+                tabContent = `
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-800">دفتر الملاحظات</h3>
+                            </div>
+                            <span id="note-saved-badge" class="text-xs text-emerald-600 font-bold bg-emerald-50 px-3 py-1 rounded-full hidden">
+                                <i class="fa-solid fa-check ml-1"></i> تم الحفظ
+                            </span>
+                        </div>
+                        <textarea id="subject-notes-area" oninput="updateSubjectNotes(this.value)" rows="12" class="w-full p-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-slate-700 leading-relaxed" placeholder="اكتب ملاحظاتك...">${sub.notes || ''}</textarea>
+                    </div>
+                `;
+            }
+
+            document.getElementById('content-area').innerHTML = `
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-${sub.color}-100 text-${sub.color}-600 flex items-center justify-center text-3xl">
+                            <i class="fa-solid ${sub.icon}"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-extrabold text-slate-800">${sub.name}</h2>
+                            <p class="text-sm text-slate-500 mt-1">الوحدات: <b>${uStats.completed}/${uStats.total}</b> | الدروس: <b>${doneLessons}/${totalLessons}</b></p>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-64">
+                        <div class="flex justify-between text-sm font-bold mb-1"><span>نسبة الإنجاز</span><span class="text-${sub.color}-600">${prog}%</span></div>
+                        <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                            <div class="bg-${sub.color}-500 h-full rounded-full transition-all duration-500" style="width: ${prog}%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2 border-b border-slate-200 pb-1">
+                    <button onclick="openSubject('${sub.id}', 'units')" class="px-5 py-2.5 rounded-t-xl font-bold text-sm transition ${activeSubjectTab === 'units' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600'}"><i class="fa-solid fa-layer-group ml-1.5"></i> الوحدات والدروس</button>
+                    <button onclick="openSubject('${sub.id}', 'questions')" class="px-5 py-2.5 rounded-t-xl font-bold text-sm transition ${activeSubjectTab === 'questions' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600'}"><i class="fa-solid fa-circle-question ml-1.5"></i> الأسئلة (${sub.questions.length})</button>
+                    <button onclick="openSubject('${sub.id}', 'notes')" class="px-5 py-2.5 rounded-t-xl font-bold text-sm transition ${activeSubjectTab === 'notes' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600'}"><i class="fa-solid fa-note-sticky ml-1.5"></i> الملاحظات</button>
+                </div>
+                <div>${tabContent}</div>
+            `;
+        }
+
+        // ==========================================
+        // 6. الجدول الدراسي
+        // ==========================================
+        function renderSchedule() {
+            document.getElementById('page-title').textContent = 'الجدول الدراسي الأسبوعي';
+            document.getElementById('page-subtitle').textContent = 'تنظيم الحصص والمحاضرات';
+            const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+
+            document.getElementById('content-area').innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div class="flex gap-3 text-xs font-bold">
+                        <span class="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700"><i class="fa-solid fa-school ml-1"></i> حضوري</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-purple-100 text-purple-700"><i class="fa-solid fa-wifi ml-1"></i> عن بعد</span>
+                    </div>
+                    <button onclick="openAddScheduleModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition"><i class="fa-solid fa-plus"></i> إضافة حصة</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    ${days.map(day => {
+                        const dayClasses = appData.schedule.filter(s => s.day === day);
+                        return `
+                            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col">
+                                <div class="bg-slate-800 text-white py-3 px-4 text-center font-bold">${day}</div>
+                                <div class="p-3 space-y-3 flex-1 min-h-[250px]">
+                                    ${dayClasses.length === 0 ? '<p class="text-xs text-slate-400 text-center mt-10">لا توجد حصص</p>' : dayClasses.map(item => `
+                                        <div class="p-3 rounded-xl border ${item.mode === 'حضوري' ? 'bg-emerald-50/50 border-emerald-200' : 'bg-purple-50/50 border-purple-200'} relative group">
+                                            <button onclick="deleteScheduleItem('${item.id}')" class="absolute top-2 left-2 text-slate-400 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition text-xs"><i class="fa-solid fa-xmark"></i></button>
+                                            <span class="text-[11px] font-bold px-2 py-0.5 rounded ${item.mode === 'حضوري' ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-100 text-purple-700'}">${item.mode}</span>
+                                            <h4 class="font-bold text-slate-800 mt-1.5 text-sm">${item.subject}</h4>
+                                            <p class="text-xs text-slate-500 mt-1"><i class="fa-regular fa-clock ml-1"></i> ${item.time}</p>
+                                            ${item.room ? `<p class="text-xs text-slate-500 mt-0.5"><i class="fa-solid fa-location-dot ml-1"></i> ${item.room}</p>` : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 7. الاختبارات والمهام
+        // ==========================================
+        function renderTasks() {
+            document.getElementById('page-title').textContent = 'الاختبارات والواجبات';
+            document.getElementById('page-subtitle').textContent = 'إدارة المواعيد الهامة والتسليمات';
+
+            document.getElementById('content-area').innerHTML = `
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-lg text-slate-800">جميع المواعيد (${appData.tasks.length})</h3>
+                    <button onclick="openAddTaskModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition"><i class="fa-solid fa-plus"></i> إضافة موعد</button>
+                </div>
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    ${appData.tasks.length === 0 ? '<p class="p-10 text-center text-slate-400">لا توجد مهام مسجلة.</p>' : `
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-right border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
+                                        <th class="py-4 px-6">الحالة</th>
+                                        <th class="py-4 px-6">النوع</th>
+                                        <th class="py-4 px-6">العنوان</th>
+                                        <th class="py-4 px-6">المادة</th>
+                                        <th class="py-4 px-6">الحضور</th>
+                                        <th class="py-4 px-6">التاريخ</th>
+                                        <th class="py-4 px-6">إجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-sm">
+                                    ${appData.tasks.map(t => `
+                                        <tr class="hover:bg-slate-50 transition ${t.done ? 'bg-slate-50/50 opacity-60' : ''}">
+                                            <td class="py-4 px-6"><input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask('${t.id}')" class="w-5 h-5 rounded text-indigo-600 cursor-pointer"></td>
+                                            <td class="py-4 px-6"><span class="px-2.5 py-1 rounded-lg text-xs font-bold ${t.type === 'اختبار' ? 'bg-rose-100 text-rose-700' : t.type === 'واجب' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}">${t.type}</span></td>
+                                            <td class="py-4 px-6 font-bold ${t.done ? 'line-through text-slate-400' : 'text-slate-800'}">${t.title}</td>
+                                            <td class="py-4 px-6 text-slate-600">${t.subject}</td>
+                                            <td class="py-4 px-6"><span class="px-3 py-1 rounded-full text-xs font-bold ${t.mode === 'حضوري' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-purple-50 text-purple-700 border border-purple-200'}">${t.mode}</span></td>
+                                            <td class="py-4 px-6 text-slate-600 font-medium">${t.date}</td>
+                                            <td class="py-4 px-6"><button onclick="deleteTask('${t.id}')" class="text-slate-400 hover:text-rose-500 transition"><i class="fa-solid fa-trash-can"></i></button></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 8. النوافذ والعمليات
+        // ==========================================
+        function openModal(title, html) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').innerHTML = html;
+            const modal = document.getElementById('modal-overlay');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal-overlay');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function openAddUnitModal() {
+            openModal('إضافة وحدة دراسية جديدة', `
+                <form onsubmit="handleAddUnit(event)" class="space-y-4">
+                    <div><label class="block text-sm font-bold text-slate-700 mb-1">اسم الوحدة</label><input type="text" id="input-unit-title" required placeholder="مثال: الوحدة الجديدة" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 outline-none"></div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition">حفظ الوحدة</button>
+                </form>
+            `);
+        }
+        function handleAddUnit(e) {
+            e.preventDefault();
+            const title = document.getElementById('input-unit-title').value.trim();
+            appData.subjects.find(s => s.id === activeSubjectId).units.push({ id: 'u_' + Date.now(), title, lessons: [] });
+            saveData(); closeModal(); renderSubjectDetail();
+        }
+        function deleteUnit(unitId) {
+            if (!confirm('حذف هذه الوحدة؟')) return;
+            const sub = appData.subjects.find(s => s.id === activeSubjectId);
+            sub.units = sub.units.filter(u => u.id !== unitId);
+            saveData(); renderSubjectDetail();
+        }
+
+        function openAddLessonModal(unitId) {
+            openModal('إضافة درس جديد', `
+                <form onsubmit="handleAddLesson(event, '${unitId}')" class="space-y-4">
+                    <div><label class="block text-sm font-bold text-slate-700 mb-1">عنوان الدرس</label><input type="text" id="input-lesson-title" required placeholder="اسم الدرس..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 outline-none"></div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition">إضافة الدرس</button>
+                </form>
+            `);
+        }
+        function handleAddLesson(e, unitId) {
+            e.preventDefault();
+            const title = document.getElementById('input-lesson-title').value.trim();
+            appData.subjects.find(s => s.id === activeSubjectId).units.find(u => u.id === unitId).lessons.push({ id: 'l_' + Date.now(), title, done: false });
+            saveData(); closeModal(); renderSubjectDetail();
+        }
+        function toggleLesson(unitId, lessonId) {
+            const sub = appData.subjects.find(s => s.id === activeSubjectId);
+            const lesson = sub.units.find(u => u.id === unitId).lessons.find(l => l.id === lessonId);
+            lesson.done = !lesson.done;
+            saveData(); renderSubjectDetail();
+        }
+        function deleteLesson(unitId, lessonId) {
+            const sub = appData.subjects.find(s => s.id === activeSubjectId);
+            const unit = sub.units.find(u => u.id === unitId);
+            unit.lessons = unit.lessons.filter(l => l.id !== lessonId);
+            saveData(); renderSubjectDetail();
+        }
+
+        function openAddQuestionModal() {
+            openModal('إضافة سؤال لبنك المراجعة', `
+                <form onsubmit="handleAddQuestion(event)" class="space-y-4">
+                    <div><label class="block text-sm font-bold text-slate-700 mb-1">السؤال</label><textarea id="input-q" required rows="2" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 outline-none"></textarea></div>
+                    <div><label class="block text-sm font-bold text-slate-700 mb-1">الإجابة</label><textarea id="input-a" required rows="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 outline-none"></textarea></div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition">حفظ السؤال</button>
+                </form>
+            `);
+        }
+        function handleAddQuestion(e) {
+            e.preventDefault();
+            appData.subjects.find(s => s.id === activeSubjectId).questions.push({ id: 'q_' + Date.now(), q: document.getElementById('input-q').value.trim(), a: document.getElementById('input-a').value.trim() });
+            saveData(); closeModal(); renderSubjectDetail();
+        }
+        function deleteQuestion(qId) {
+            const sub = appData.subjects.find(s => s.id === activeSubjectId);
+            sub.questions = sub.questions.filter(q => q.id !== qId);
+            saveData(); renderSubjectDetail();
+        }
+
+        function updateSubjectNotes(val) {
+            appData.subjects.find(s => s.id === activeSubjectId).notes = val;
+            saveData();
+            const badge = document.getElementById('note-saved-badge');
+            badge.classList.remove('hidden');
+            setTimeout(() => badge.classList.add('hidden'), 1500);
+        }
+
+        function openAddTaskModal() {
+            const subjectOptions = appData.subjects.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+            openModal('إضافة موعد أو اختبار', `
+                <form onsubmit="handleAddTask(event)" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-sm font-bold text-slate-700 mb-1">النوع</label><select id="t-type" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 outline-none"><option value="اختبار">اختبار</option><option value="واجب">واجب</option><option value="نشاط">نشاط</option></select></div>
+                        <div><label class="block text-sm font-bold text-slate-700 mb-1">المادة</label><select id="t-subject" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 outline-none">${subjectOptions}</select></div>
+                    </div>
+                    <div><label class="block text-sm font-bold text-slate-700 mb-1">العنوان</label><input type="text" id="t-title" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 outline-none"></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-sm font-bold text-slate-700 mb-1">التاريخ</label><input type="date" id="t-date" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 outline-none"></div>
+                        <div><label class="block text-sm font-bold text-slate-700 mb-1">الحضور</label><select id="t-mode" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 outline-none"><option value="حضوري">حضوري</option><option value="عن بعد">عن بعد</option></select></div>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition">حفظ الموعد</button>
+                </form>
+            `);
+        }
+        function handleAddTask(e) {
+            e.preventDefault();
+            appData.tasks.push({ id: 't_' + Date.now(), type: document.getElementById('t-type').value, subject: document.getElementById('t-subject').value, title: document.getElementById('t-title').value.trim(), date: document.getElementById('t-date').value, mode: document.getElementById('t-mode').value, done: false });
+            saveData(); closeModal(); renderTasks();
+        }
+        function toggleTask(id) {
+            const task = appData.tasks.find(t => t.id === id);
+            task.done = !task.done;
+            saveData(); renderTasks();
+        }
+        function deleteTask(id) {
+            appData.tasks = appData.tasks.filter(t => t.id !== id);
+            saveData(); renderTasks();
+        }
+
+        function openAddScheduleModal() {
+            const subjectOptions = appData.subjects.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+            openModal('إضافة حصة للجدول', `
+                <form onsubmit="handleAddSchedule(event)" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-sm font-bold text-slate-700 mb-1">اليوم</label><select id="s-day" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 outline-none"><option value="الأحد">الأحد</option><option value="الإثنين">الإثنين</option><option value="الثلاثاء">الثلاثاء</option><option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option></select></div>
+                        <div><label class="block text-sm font-bold text-slate-700 mb-1">المادة</label><select id="s-subject" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 outline-none">${subjectOptions}</select></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-sm font-bold text-slate-700 mb-1">الوقت</label><input type="text" id="s-time" required placeholder="08:00 ص" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 outline-none"></div>
+                        <div><label class="block text-sm font-bold text-slate-700 mb-1">الحضور</label><select id="s-mode" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 outline-none"><option value="حضوري">حضوري</option><option value="عن بعد">عن بعد</option></select></div>
+                    </div>
+                    <div><label class="block text-sm font-bold text-slate-700 mb-1">القاعة / المنصة</label><input type="text" id="s-room" placeholder="قاعة 102 أو Teams" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 outline-none"></div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition">حفظ</button>
+                </form>
+            `);
+        }
+        function handleAddSchedule(e) {
+            e.preventDefault();
+            appData.schedule.push({ id: 's_' + Date.now(), day: document.getElementById('s-day').value, subject: document.getElementById('s-subject').value, time: document.getElementById('s-time').value.trim(), mode: document.getElementById('s-mode').value, room: document.getElementById('s-room').value.trim() });
+            saveData(); closeModal(); renderSchedule();
+        }
+        function deleteScheduleItem(id) {
+            appData.schedule = appData.schedule.filter(s => s.id !== id);
+            saveData(); renderSchedule();
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "injaz_backup.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function resetAllData() {
+            if (confirm('تصفير البيانات والعودة للوضع الافتراضي؟')) {
+                localStorage.removeItem('injaz_study_data');
+                localStorage.removeItem('injaz_current_user');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
